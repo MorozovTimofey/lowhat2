@@ -1,0 +1,10 @@
+.header {
+  background-color: #ddd;
+  height: 70px;
+  width: 100vw;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
