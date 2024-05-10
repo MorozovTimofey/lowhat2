@@ -3,7 +3,15 @@ import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
 import { Slider } from "./ui/slider";
 
-function Player({ selectedTrack }) {
+interface PlayerProps {
+  selectedTrack: {
+    image_s3_url: string;
+    track_name: string;
+    artist: string;
+  } | null;
+}
+
+function Player({ selectedTrack }: PlayerProps) {
   return (
     <div className="fixed w-full h-[80px] md:h-[100px] flex flex-col gap-[16px] bottom-0 pt-[10px] md:py-[10px] px-[10px] md:px-[40px] z-10 bg-slate-300 dark:bg-slate-600">
       <div>
