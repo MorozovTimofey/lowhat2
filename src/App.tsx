@@ -34,7 +34,7 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Header />
         <Panel className="mx-[10px] my-[5px] md:mx-[40px] md:my-[20px] h-[75vh] md:h-[85vh] gap-[10px] grid grid-cols-1 md:grid-cols-3 content-start">
-          {tracks.map((track, index) => (
+          {tracks.map((track) => (
             <Card
               key={track._id}
               className="flex gap-[10px] items-center p-[10px] h-[100px] cursor-pointer"
