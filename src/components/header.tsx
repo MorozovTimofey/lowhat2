@@ -1,14 +1,7 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
-import { Card } from "./ui/card";
+import { Link } from "react-router-dom";
 import { MaterialSymbol } from "react-material-symbols";
 import "react-material-symbols/rounded";
 
@@ -26,8 +19,16 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side={side} className="flex flex-col pt-[50px]">
-              <Button variant="secondary">Песни</Button>
-              <Button variant="secondary">Альбомы</Button>
+              <Link to="/tracks">
+                <Button variant="secondary" className="w-full">
+                  Песни
+                </Button>
+              </Link>
+              <Link to="/albums">
+                <Button variant="secondary" className="w-full">
+                  Альбомы
+                </Button>
+              </Link>
             </SheetContent>
           </Sheet>
         ))}
