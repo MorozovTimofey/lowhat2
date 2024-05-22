@@ -1,7 +1,17 @@
-import { useState, useEffect, FormEventHandler } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import ReactWaves from "@dschoon/react-waves";
 import { MaterialSymbol } from "react-material-symbols";
 import { Button } from "./ui/button";
 import TrackSlider from "./ui/track-slider-props";
+
+interface Track {
+  _id: string;
+  image_s3_url: string;
+  track_name: string;
+  artist: string;
+  youtube_url?: string;
+  audio_s3_url: string;
+}
 
 interface PlayerProps {
   selectedTrack: Track | null;
@@ -13,16 +23,20 @@ function Player({ selectedTrack }: PlayerProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  const updateProgress = () => {
+  const updateProgress = useCallback(() => {
     setCurrentTime(audio.currentTime);
-  };
+  }, [audio]);
 
   useEffect(() => {
     if (selectedTrack) {
       audio.src = selectedTrack.audio_s3_url;
+      audio.crossOrigin = "anonymous";
       audio.addEventListener("timeupdate", updateProgress);
       audio.addEventListener("loadedmetadata", () => {
         setDuration(audio.duration);
+      });
+      audio.addEventListener("error", (e) => {
+        console.error("Error loading audio:", e);
       });
     }
 
@@ -31,8 +45,11 @@ function Player({ selectedTrack }: PlayerProps) {
       audio.removeEventListener("loadedmetadata", () => {
         setDuration(audio.duration);
       });
+      audio.removeEventListener("error", (e) => {
+        console.error("Error loading audio:", e);
+      });
     };
-  }, [selectedTrack, audio]);
+  }, [selectedTrack, audio, updateProgress]);
 
   const togglePlay = () => {
     if (selectedTrack) {
@@ -51,35 +68,30 @@ function Player({ selectedTrack }: PlayerProps) {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  const handleChangeTime: FormEventHandler<HTMLDivElement> = (event) => {
-    const newTime = Number((event.target as HTMLInputElement).value);
-
-    // Проверяем, что новое время воспроизведения находится в пределах допустимого диапазона
-    if (newTime >= 0 && newTime <= duration) {
-      setCurrentTime(newTime);
-
-      // Проверяем, что аудиофайл загружен и готов к воспроизведению
-      if (selectedTrack && audio.readyState >= 2) {
-        // Устанавливаем новое время воспроизведения
-        audio.currentTime = newTime;
-
-        // Проверяем, что аудиофайл воспроизводится или на паузе, и начинаем воспроизведение, если необходимо
-        if (!isPlaying || audio.paused) {
-          audio.play();
-          setIsPlaying(true);
-        }
-      } else {
-        console.error("Аудиофайл не загружен или не готов к воспроизведению.");
-      }
-    } else {
-      console.error(
-        "Новое время воспроизведения выходит за пределы допустимого диапазона."
-      );
-    }
-  };
-
   return (
-    <div className="w-full h-[80px] flex flex-col justify-center pr-[20px] pl-[10px]">
+    <div className="w-full h-[300px] flex flex-col justify-center pr-[20px] pl-[10px]">
+      {selectedTrack && (
+        <ReactWaves
+          audioFile={selectedTrack.audio_s3_url}
+          className={"react-waves"}
+          options={{
+            barWidth: 3,
+            barHeight: 5,
+            barGap: 6,
+            backend: "MediaElement",
+            normalize: true,
+            cursorWidth: 0,
+            mediaType: "audio",
+            hideScrollbar: true,
+            responsive: true,
+            progressColor: "#2492FC",
+            waveColor: "#E9EFF4",
+          }}
+          zoom={1}
+          volume={0.1}
+          playing={isPlaying}
+        />
+      )}
       <div className="flex items-center">
         <Button variant="ghost" onClick={togglePlay}>
           <MaterialSymbol
@@ -101,9 +113,9 @@ function Player({ selectedTrack }: PlayerProps) {
             setCurrentTime(newValue);
             if (audio.readyState >= 2) {
               audio.currentTime = newValue;
+              // Убедитесь, что аудио воспроизводится, если необходимо
               if (!isPlaying || audio.paused) {
                 audio.play();
-                setIsPlaying(true);
               }
             } else {
               console.error(
