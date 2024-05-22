@@ -7,19 +7,25 @@ import "react-material-symbols/rounded";
 
 const SHEET_SIDES = ["left"] as const;
 
-export default function Header() {
+interface HeaderProps {
+  className?: string;
+}
+
+export default function Header({ className }: HeaderProps) {
   return (
-    <header className="w-full h-[70px] flex items-center justify-between px-[40px] border-b-2 border-solid">
+    <header
+      className={`w-full flex items-center justify-between px-[40px] ${className}`}
+    >
       <div>
         {SHEET_SIDES.map((side) => (
           <Sheet key={side}>
             <SheetTrigger asChild>
-              <Button variant="outline">
-                <MaterialSymbol icon="menu" size={14} weight={600} />
+              <Button variant="outline" className="border-none">
+                <MaterialSymbol icon="menu" size={24} weight={400} />
               </Button>
             </SheetTrigger>
             <SheetContent side={side} className="flex flex-col pt-[50px]">
-              <Link to="/tracks">
+              <Link to="/">
                 <Button variant="secondary" className="w-full">
                   Песни
                 </Button>
@@ -29,12 +35,17 @@ export default function Header() {
                   Альбомы
                 </Button>
               </Link>
+              <Link to="/artists">
+                <Button variant="secondary" className="w-full">
+                  Исполнители
+                </Button>
+              </Link>
             </SheetContent>
           </Sheet>
         ))}
       </div>
       <div className="font-semibold text-[24px]">LowHat</div>
-      <div className="flex gap ">
+      <div className="flex gap">
         <ModeToggle />
       </div>
     </header>
