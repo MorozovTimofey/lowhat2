@@ -3,6 +3,7 @@ import ReactWaves from "@dschoon/react-waves";
 import { MaterialSymbol } from "react-material-symbols";
 import { Button } from "./ui/button";
 import TrackSlider from "./ui/track-slider-props";
+import axios from "axios"; // Импортируем axios для API запросов
 
 interface Track {
   _id: string;
@@ -22,6 +23,7 @@ function Player({ selectedTrack }: PlayerProps) {
   const [audio] = useState(new Audio());
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [hasPlayed, setHasPlayed] = useState(false); // Новый стейт
 
   const updateProgress = useCallback(() => {
     setCurrentTime(audio.currentTime);
@@ -51,12 +53,24 @@ function Player({ selectedTrack }: PlayerProps) {
     };
   }, [selectedTrack, audio, updateProgress]);
 
+  const incrementListenCount = async (trackId: string) => {
+    try {
+      await axios.post(`http://127.0.0.1:8000/tracks/${trackId}/listen`);
+    } catch (error) {
+      console.error("Error incrementing listen count:", error);
+    }
+  };
+
   const togglePlay = () => {
     if (selectedTrack) {
       if (isPlaying) {
         audio.pause();
       } else {
         audio.play();
+        if (!hasPlayed) {
+          incrementListenCount(selectedTrack._id); // Увеличиваем количество прослушиваний при первом воспроизведении
+          setHasPlayed(true); // Устанавливаем флаг, что аудио уже воспроизводилось
+        }
       }
       setIsPlaying(!isPlaying);
     }

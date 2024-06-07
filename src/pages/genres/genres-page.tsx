@@ -29,7 +29,7 @@ export const GenresPage = () => {
   }, []);
 
   return (
-    <Panel className="h-full grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6 p-6 content-start">
+    <Panel className="h-full grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-6 p-6 content-start">
       {genres.map((genre) => (
         <Link
           to={`/genres/${genre._id}`}
