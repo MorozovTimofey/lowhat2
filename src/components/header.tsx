@@ -78,6 +78,12 @@ export default function Header({ className }: HeaderProps) {
                   <span>Топ</span>
                 </Button>
               </Link>
+              <Link to="/love">
+                <Button variant="secondary" className="w-full flex gap-[7px]">
+                  <MaterialSymbol icon="favorite" size={20} weight={400} fill />
+                  <span>Моя музыка</span>
+                </Button>
+              </Link>
               {role === "Admin" && (
                 <Link to="/admin">
                   <Button variant="secondary" className="w-full flex gap-[7px]">

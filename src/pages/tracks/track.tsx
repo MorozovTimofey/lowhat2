@@ -5,6 +5,7 @@ import Panel from "@/components/ui/panel";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Player from "@/components/player";
+import { MaterialSymbol } from "react-material-symbols";
 
 interface Track {
   _id: string;
@@ -61,15 +62,20 @@ const Track = () => {
 
   return (
     <Panel className="h-[100%] gap-[14px]">
-      <Card className="flex p-[15px] gap-[10px] items-center">
-        <img
-          src={track.image_s3_url}
-          alt="Track Image"
-          className="w-[100px] h-[100px] rounded-[20px]"
-        />
-        <div>
-          <div className="font-semibold text-[24px]">{track.track_name}</div>
-          <Label>{artist.artist_name}</Label>
+      <Card className="flex p-[15px] gap-[10px] items-center justify-between">
+        <div className="flex p-[15px] gap-[10px] items-center">
+          <img
+            src={track.image_s3_url}
+            alt="Track Image"
+            className="w-[100px] h-[100px] rounded-[20px]"
+          />
+          <div>
+            <div className="font-semibold text-[24px]">{track.track_name}</div>
+            <Label>{artist.artist_name}</Label>
+          </div>
+        </div>
+        <div className="p-[15px]">
+          <MaterialSymbol icon="favorite" size={24} weight={600} fill />
         </div>
       </Card>
       <Card>

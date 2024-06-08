@@ -1,16 +1,9 @@
+import SongTable from "@/components/song-table";
 import { Card } from "@/components/ui/card";
 import Panel from "@/components/ui/panel";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 interface SongData {
   _id: string;
@@ -22,6 +15,11 @@ interface SongData {
   audio_s3_url: string;
   image_s3_url: string;
   youtube_url: string;
+}
+
+interface GenreData {
+  genre_name: string;
+  genre_image_url: string;
 }
 
 export const Genre = () => {
@@ -65,44 +63,13 @@ export const Genre = () => {
       <Card className="flex p-[15px] gap-[10px] items-center">
         <img
           src={genre.genre_image_url}
-          alt="genre Cover"
+          alt="Genre Cover"
           className="w-[100px] h-[100px] rounded-[20px]"
         />
         <div className="font-semibold text-[24px]">{genre.genre_name}</div>
       </Card>
       <Card className="flex flex-col mt-[10px] p-[15px] gap-[10px]">
-        <div className="font-semibold text-[24px]">Песни:</div>
-
-        <Table className="w-full">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[5%] text-center">Обложка</TableHead>
-              <TableHead className="w-[60%]">Название</TableHead>
-              <TableHead className="w-[5%] text-center">
-                Прослушиваний
-              </TableHead>
-              <TableHead className="w-[5%] text-center">Лайки</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="cursor-pointer">
-            {songs.map((song) => (
-              <TableRow key={song._id}>
-                <TableCell className="text-center">
-                  <img
-                    src={song.image_s3_url}
-                    alt="Song Cover"
-                    className="w-[50px] h-[50px] rounded-[10px] mx-auto"
-                  />
-                </TableCell>
-                <TableCell>
-                  <Link to={`/tracks/${song._id}`}>{song.track_name}</Link>
-                </TableCell>
-                <TableCell className="text-center">{song.listens}</TableCell>
-                <TableCell className="text-center">{song.likes}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <SongTable songs={songs} />
       </Card>
     </Panel>
   );
