@@ -13,13 +13,6 @@ export const Admin = () => {
         </Card>
       </Link>
 
-      <Link to="/admin/edit">
-        <Card className="flex items-center justify-center gap-4 text-[45px] p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl border-8 border-yellow-500">
-          <MaterialSymbol icon="edit" className="text-yellow-500" />
-          <span>Изменить</span>
-        </Card>
-      </Link>
-
       <Link to="/admin/delete">
         <Card className="flex items-center justify-center gap-4 text-[45px] p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl border-8 border-red-500">
           <MaterialSymbol icon="delete" className="text-red-500" />

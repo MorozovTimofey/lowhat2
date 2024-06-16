@@ -22,6 +22,8 @@ import { Delete } from "./pages/admin/delete";
 import { Top } from "./pages/top/top";
 import { TopLikes } from "./pages/top/top-likes";
 import { TopListens } from "./pages/top/top-listens";
+import { Love } from "./pages/love/love";
+import { EditArtist } from "./pages/edit/EditArtist";
 
 function Layout() {
   const location = useLocation();
@@ -35,6 +37,8 @@ function Layout() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/top" element={<Top />} />
+          <Route path="/love" element={<Love />} />
+          <Route path="/admin/edit/artist" element={<EditArtist />} />
           <Route path="/top/likes" element={<TopLikes />} />
           <Route path="/top/listens" element={<TopListens />} />
           <Route path="/registration" element={<Registration />} />

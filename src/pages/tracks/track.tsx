@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Panel from "@/components/ui/panel";
@@ -27,6 +27,7 @@ const Track = () => {
   const [track, setTrack] = useState<Track | null>(null);
   const [artist, setArtist] = useState<Artist | null>(null);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTrack = async () => {
@@ -37,6 +38,7 @@ const Track = () => {
         setTrack(response.data);
         fetchArtist(response.data.artist);
         setAudio(new Audio(response.data.audio_s3_url));
+        checkIfFavorite(response.data._id);
       } catch (error) {
         console.error("Error fetching track:", error);
       }
@@ -53,6 +55,58 @@ const Track = () => {
       setArtist(response.data);
     } catch (error) {
       console.error("Error fetching artist:", error);
+    }
+  };
+
+  const checkIfFavorite = async (trackId: string) => {
+    try {
+      const token = document.cookie
+        .split(";")
+        .find((cookie) => cookie.trim().startsWith("access_token="));
+      if (token) {
+        const response = await axios.get(
+          `http://127.0.0.1:8000/users/favorites`,
+          {
+            headers: {
+              Authorization: `Bearer ${token.split("=")[1]}`,
+            },
+          }
+        );
+        setIsFavorite(response.data.includes(trackId));
+      }
+    } catch (error) {
+      console.error("Error checking favorite status:", error);
+    }
+  };
+
+  const handleFavorite = async () => {
+    try {
+      const token = document.cookie
+        .split(";")
+        .find((cookie) => cookie.trim().startsWith("access_token="));
+      if (token) {
+        const url = `http://127.0.0.1:8000/favorites/?track_id=${track!._id}`;
+        if (isFavorite) {
+          await axios.delete(url, {
+            headers: {
+              Authorization: `Bearer ${token.split("=")[1]}`,
+            },
+          });
+          setIsFavorite(false);
+        } else {
+          await axios.post(`http://127.0.0.1:8000/favorites/`, null, {
+            headers: {
+              Authorization: `Bearer ${token.split("=")[1]}`,
+            },
+            params: {
+              track_id: track!._id,
+            },
+          });
+          setIsFavorite(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating favorite status:", error);
     }
   };
 
@@ -74,8 +128,13 @@ const Track = () => {
             <Label>{artist.artist_name}</Label>
           </div>
         </div>
-        <div className="p-[15px]">
-          <MaterialSymbol icon="favorite" size={24} weight={600} fill />
+        <div className="p-[15px] cursor-pointer" onClick={handleFavorite}>
+          <MaterialSymbol
+            icon={isFavorite ? "favorite" : "favorite_border"}
+            size={24}
+            weight={600}
+            fill={isFavorite}
+          />
         </div>
       </Card>
       <Card>
