@@ -8,24 +8,45 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 
+// Определение интерфейсов для данных
+interface Track {
+  _id: string;
+  track_name: string;
+}
+
+interface Album {
+  _id: string;
+  album_name: string;
+}
+
+interface Artist {
+  _id: string;
+  artist_name: string;
+}
+
+interface Genre {
+  _id: string;
+  genre_name: string;
+}
+
 export const Delete = () => {
-  const [tracks, setTracks] = useState([]); // Состояние для хранения треков
-  const [albums, setAlbums] = useState([]); // Состояние для хранения альбомов
-  const [artists, setArtists] = useState([]); // Состояние для хранения исполнителей
-  const [genres, setGenres] = useState([]); // Состояние для хранения жанров
+  const [tracks, setTracks] = useState<Track[]>([]); // Состояние для хранения треков
+  const [albums, setAlbums] = useState<Album[]>([]); // Состояние для хранения альбомов
+  const [artists, setArtists] = useState<Artist[]>([]); // Состояние для хранения исполнителей
+  const [genres, setGenres] = useState<Genre[]>([]); // Состояние для хранения жанров
   const [message, setMessage] = useState(""); // Сообщение об успешном удалении или ошибке
 
-  const [selectedTrack, setSelectedTrack] = useState(""); // Выбранный трек
-  const [selectedAlbum, setSelectedAlbum] = useState(""); // Выбранный альбом
-  const [selectedArtist, setSelectedArtist] = useState(""); // Выбранный исполнитель
-  const [selectedGenre, setSelectedGenre] = useState(""); // Выбранный жанр
+  const [selectedTrack, setSelectedTrack] = useState<string>(""); // Выбранный трек
+  const [selectedAlbum, setSelectedAlbum] = useState<string>(""); // Выбранный альбом
+  const [selectedArtist, setSelectedArtist] = useState<string>(""); // Выбранный исполнитель
+  const [selectedGenre, setSelectedGenre] = useState<string>(""); // Выбранный жанр
 
   // Функция для загрузки треков с сервера
   const fetchTracks = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/tracks/");
       if (response.ok) {
-        const data = await response.json();
+        const data: Track[] = await response.json();
         setTracks(data);
       } else {
         console.error("Error fetching tracks:", response.statusText);
@@ -40,7 +61,7 @@ export const Delete = () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/albums/");
       if (response.ok) {
-        const data = await response.json();
+        const data: Album[] = await response.json();
         setAlbums(data);
       } else {
         console.error("Error fetching albums:", response.statusText);
@@ -55,7 +76,7 @@ export const Delete = () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/artists/");
       if (response.ok) {
-        const data = await response.json();
+        const data: Artist[] = await response.json();
         setArtists(data);
       } else {
         console.error("Error fetching artists:", response.statusText);
@@ -70,7 +91,7 @@ export const Delete = () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/genres/");
       if (response.ok) {
-        const data = await response.json();
+        const data: Genre[] = await response.json();
         setGenres(data);
       } else {
         console.error("Error fetching genres:", response.statusText);
@@ -89,7 +110,7 @@ export const Delete = () => {
   }, []);
 
   // Функция для удаления элемента
-  const handleDelete = async (url) => {
+  const handleDelete = async (url: string) => {
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -100,8 +121,11 @@ export const Delete = () => {
         setMessage("Ошибка при удалении элемента.");
       }
     } catch (error) {
-      console.error("Network error:", error);
-      setMessage("Ошибка сети: " + error.message);
+      if (error instanceof Error) {
+        setMessage("Ошибка сети: " + error.message);
+      } else {
+        setMessage("Неизвестная ошибка.");
+      }
     }
   };
 

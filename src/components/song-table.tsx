@@ -8,7 +8,19 @@ import {
   TableCell,
 } from "@/components/ui/table";
 
-const SongTable = ({ songs }) => {
+interface SongData {
+  _id: string;
+  track_name: string;
+  album_id: string;
+  genre_id: string;
+  listens: number;
+  likes: number;
+  audio_s3_url: string;
+  image_s3_url: string;
+  youtube_url: string;
+}
+
+const SongTable: React.FC<{ songs: SongData[] }> = ({ songs }) => {
   return (
     <Table className="w-full">
       <TableHeader>
